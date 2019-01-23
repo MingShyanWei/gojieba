@@ -6,7 +6,10 @@ package gojieba
 #include "jieba.h"
 */
 import "C"
-import "unsafe"
+import (
+	"strings"
+	"unsafe"
+)
 
 type TokenizeMode int
 
@@ -103,7 +106,7 @@ func (x *Jieba) Tokenize(s string, mode TokenizeMode, hmm bool) []Word {
 	if hmm {
 		c_int_hmm = 1
 	}
-	cstr := C.CString(s)
+	cstr := C.CString(strings.ToLower(s))
 	defer C.free(unsafe.Pointer(cstr))
 	var words *C.Word = C.Tokenize(x.jieba, cstr, C.TokenizeMode(mode), C.int(c_int_hmm))
 	defer C.free(unsafe.Pointer(words))
